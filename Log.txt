@@ -1,0 +1,6 @@
+11:31:01.003 [MackMulti] Starting Bot...
+11:31:01.007 [MackMulti] --------------------------------------------------------------------------------
+11:31:01.011 [Trace] Bot starting
+11:31:01.012 [Trace] Bot: Loading lobby configuration.
+11:31:01.016 [Info] Bot: Loaded lobby configuration for lobby 'Your Lobby Name'
+11:31:01.031 [Info] BanchoConnection: Connecting to Bancho

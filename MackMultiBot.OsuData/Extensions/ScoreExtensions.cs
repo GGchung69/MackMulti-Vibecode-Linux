@@ -1,6 +1,7 @@
 ﻿using MackMultiBot.OsuData.Data;
 using MackMultiBot.Logging;
-using OsuSharp.Models.Scores;
+using osu.NET.Models.Scores;
+using System.Linq;
 
 namespace MackMultiBot.OsuData.Extensions;
 
@@ -43,5 +44,5 @@ public static class ScoreExtensions
         return bitset;
     }
 
-    public static int GetModsBitset(this Score score) => GetModsBitset(score.Mods);
+    public static int GetModsBitset(this Score score) => GetModsBitset(score.Mods.Select(m => m.Acronym).ToArray());
 }

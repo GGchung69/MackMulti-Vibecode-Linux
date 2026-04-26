@@ -4,7 +4,7 @@ using MackMultiBot.Data;
 using MackMultiBot.Database;
 using MackMultiBot.Database.Entities;
 using MackMultiBot.Interfaces;
-using OsuSharp.Models.Beatmaps;
+using osu.NET.Models.Beatmaps;
 using MackMultiBot.Logging;
 using MackMultiBot.Database.Databases;
 using System.Linq;
@@ -90,7 +90,7 @@ namespace MackMultiBot.Behaviors
 			try
 			{
 				var beatmapInfo = await context.UsingApiClient(async (apiClient) => await apiClient.GetBeatmapAsync(beatmapShell.Id));
-				var difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(beatmapShell.Id));
+				var difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(beatmapShell.Id, osu.NET.Enums.Ruleset.Osu, Array.Empty<string>()));
 
 				if (beatmapInfo == null)
 				{
@@ -117,7 +117,7 @@ namespace MackMultiBot.Behaviors
 				// DT?
 				if (validationResult == MapValidationResult.InvalidDifficulty && lobbyRuleConfig!.MinimumDifficulty > Math.Round(difficultyAttributes.DifficultyRating, 2))
 				{
-					var dtDifficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(beatmapShell.Id, ["DT"])); 
+					var dtDifficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(beatmapShell.Id, osu.NET.Enums.Ruleset.Osu, new[] { "DT" })); 
 					
 					// Is map valid with DT?
 					if (dtDifficultyAttributes != null && await beatmapValidator.ValidateBeatmap(beatmapInfo, dtDifficultyAttributes, (context.MultiplayerLobby.Mods & Mods.Freemod) != 0) == MapValidationResult.Valid)
@@ -169,12 +169,12 @@ namespace MackMultiBot.Behaviors
 
 			// Map validation
 			var beatmapInfo = await context.UsingApiClient(async (apiClient) => await apiClient.GetBeatmapAsync(Data.LastBotAppliedBeatmapId));
-			var difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(Data.LastBotAppliedBeatmapId));
+			var difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(Data.LastBotAppliedBeatmapId, osu.NET.Enums.Ruleset.Osu, Array.Empty<string>()));
 
 			if ((context.MultiplayerLobby.Mods & Mods.DoubleTime) != 0)
 			{
 				Logger.Log(LogLevel.Trace, "MapManagerBehavior: DT ENABLED");
-				difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(Data.LastBotAppliedBeatmapId, ["DT"]));
+				difficultyAttributes = await context.UsingApiClient(async (apiClient) => await apiClient.GetDifficultyAttributesAsync(Data.LastBotAppliedBeatmapId, osu.NET.Enums.Ruleset.Osu, new[] { "DT" }));
 			}
 
 			if (beatmapInfo == null)
@@ -221,7 +221,7 @@ namespace MackMultiBot.Behaviors
 
 		void SendBeatmapInfo(BeatmapExtended beatmapInfo, DifficultyAttributes difficultyAttributes)
 		{
-			var beatmapSet = (beatmapInfo as Beatmap).Set;
+			var beatmapSet = beatmapInfo.Set;
 			var roundedSr = Math.Round(difficultyAttributes.DifficultyRating, 2);
 
 			context.SendMessage($"[https://osu.ppy.sh/b/{beatmapInfo.Id} {beatmapSet?.Artist} - {beatmapSet?.Title} [{beatmapInfo.Version}]] - [https://catboy.best/d/{beatmapInfo.SetId} Mirror]");
@@ -241,7 +241,7 @@ namespace MackMultiBot.Behaviors
 
 		async Task EnforceLobbyRules(BeatmapExtended beatmapInfo, DifficultyAttributes difficultyAttributes, MapValidationResult validationResult, LobbyRuleConfiguration lobbyRuleConfig, int mods = 0)
 		{
-			var beatmapSet = (beatmapInfo as Beatmap).Set;
+			var beatmapSet = beatmapInfo.Set;
 
 			// Rule override
 			if (Data.RuleOverrideActive)

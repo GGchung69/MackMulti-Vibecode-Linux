@@ -8,7 +8,7 @@ using MackMultiBot.Database.Entities;
 using MackMultiBot.Interfaces;
 using MackMultiBot.Logging;
 using Microsoft.EntityFrameworkCore;
-using OsuSharp;
+using osu.NET;
 
 namespace MackMultiBot
 {
@@ -16,7 +16,7 @@ namespace MackMultiBot
 	{
 		public ILobby? Lobby { get; private set; }
 		public BanchoConnection BanchoConnection { get; } = new(botConfiguration);
-		public OsuApiClient OsuApiClient { get; } = new(botConfiguration.ApiClientId, botConfiguration.ApiClientSecret);
+		public OsuApiClient OsuApiClient { get; } = new(new osu.NET.Authorization.OsuClientAccessTokenProvider(botConfiguration.ApiClientId.ToString(), botConfiguration.ApiClientSecret), null);
 
 		public CommandProcessor? CommandProcessor { get; private set; }
 

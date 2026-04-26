@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -11,12 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BanchoSharp">
-      <HintPath>..\..\Forks\BanchoSharp\BanchoSharp\bin\Release\net6.0\BanchoSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OsuSharp">
-      <HintPath>..\..\Forks\osu-sharp\OsuSharp\bin\Debug\netstandard2.0\Release\net8.0\OsuSharp.dll</HintPath>
-    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BanchoSharp" Version="1.5.0" />
+    <PackageReference Include="osu.NET" Version="0.15.0" />
   </ItemGroup>
 
 </Project>

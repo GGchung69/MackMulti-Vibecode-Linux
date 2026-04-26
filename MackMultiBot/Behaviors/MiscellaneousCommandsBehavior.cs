@@ -9,10 +9,10 @@ using MackMultiBot.Extensions;
 using MackMultiBot.Interfaces;
 using MackMultiBot.Logging;
 using MackMultiBot.OsuData.Extensions;
-using OsuSharp.Enums;
-using OsuSharp.Models.Beatmaps;
-using OsuSharp.Models.Scores;
-using OsuSharp.Models.Users;
+using osu.NET.Enums;
+using osu.NET.Models.Beatmaps;
+using osu.NET.Models.Scores;
+using osu.NET.Models.Users;
 using System.Globalization;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -449,11 +449,11 @@ namespace MackMultiBot.Behaviors
 		async Task<List<ScoreResult>> GetRecentScores()
 		{
 			var players = context.MultiplayerLobby.Players.Where(x => x.Id != null).ToList();
-			var getScoreTasks = new List<Task<OsuSharp.Models.Scores.Score[]?>>();
+			var getScoreTasks = new List<Task<osu.NET.Models.Scores.Score[]>>();
 			
 			Logger.Log(LogLevel.Trace, $"Getting recent scores of players: {string.Join(", ", players.Select(x => x.Name))}");
 
-			await context.Lobby.Bot.OsuApiClient.EnsureAccessTokenAsync();
+			
 
 			await using var userDb = new UserDb();
 
@@ -468,13 +468,13 @@ namespace MackMultiBot.Behaviors
 				{
 					await Task.Delay(index * 250);
 
-					return await context.UsingApiClient(async (apiClient) => await apiClient.GetUserScoresAsync(players[index].Id!.Value, UserScoreType.Recent, 1, 1, "osu", 1));
+					return await context.UsingApiClient(async (apiClient) => await apiClient.GetUserScoresAsync((int)players[index].Id!.Value, UserScoreType.Recent, false, true, osu.NET.Enums.Ruleset.Osu, 1, 0));
 				}));
 			}
 
 			await Task.WhenAll(getScoreTasks);
 
-			return players.Select(player => new ScoreResult((MultiplayerPlayer)player, getScoreTasks.Select(x => x.Result?.FirstOrDefault()).ToList().FirstOrDefault(x => x?.UserId == player.Id!))).ToList();
+			return players.Select(player => new ScoreResult((MultiplayerPlayer)player, getScoreTasks.Select(x => x.Result.FirstOrDefault()).ToList().FirstOrDefault(x => x?.UserId == player.Id!))).ToList();
 		}
 
 		async Task StoreMapData(IReadOnlyList<ScoreResult> recentScores)
@@ -519,12 +519,12 @@ namespace MackMultiBot.Behaviors
 						OsuScoreId = score.Id,
 						BeatmapId = score.Beatmap!.Id,
 						TotalScore = score.TotalScore,
-						Rank = score.IsPass ? score.Grade.GetOsuRank() : OsuRank.F,
+						Rank = score.IsPassed ? score.Grade.GetOsuRank() : OsuRank.F,
 						MaxCombo = score.MaxCombo,
-						Count300 = score.Statistics.Count300,
-						Count100 = score.Statistics.Count100,
-						Count50 = score.Statistics.Count50,
-						CountMiss = score.Statistics.Misses,
+						Count300 = score.Statistics.Great ?? 0,
+						Count100 = score.Statistics.Ok ?? 0,
+						Count50 = score.Statistics.Meh ?? 0,
+						CountMiss = score.Statistics.Miss ?? 0,
 						Mods = score.GetModsBitset(),
 						Time = DateTime.UtcNow
 					});

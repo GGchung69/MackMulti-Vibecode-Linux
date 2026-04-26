@@ -5,7 +5,7 @@ using MackMultiBot.Database.Databases;
 using MackMultiBot.Database.Entities;
 using MackMultiBot.Interfaces;
 using MackMultiBot.Logging;
-using OsuSharp.Models.Beatmaps;
+using osu.NET.Models.Beatmaps;
 using System;
 using System.Collections.Generic;
 using System.Linq;

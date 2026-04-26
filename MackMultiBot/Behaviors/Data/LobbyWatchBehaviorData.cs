@@ -1,7 +1,7 @@
 ﻿using BanchoSharp.Multiplayer;
 using MackMultiBot.Data;
 using MackMultiBot.Interfaces;
-using OsuSharp.Enums;
+using osu.NET.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

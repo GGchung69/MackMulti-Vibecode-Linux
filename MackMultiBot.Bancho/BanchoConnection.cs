@@ -111,14 +111,16 @@ namespace MackMultiBot.Bancho
 
         private void BanchoOnAuthenticated()
 		{
-			if (BanchoClient?.TcpClient == null)
+			var tcpField = BanchoClient?.GetType().GetField("_tcp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        var tcpClient = tcpField?.GetValue(BanchoClient) as System.Net.Sockets.TcpClient;
+                        if (tcpClient == null)
 				return;
 
 			Logging.Logger.Log(Logging.LogLevel.Info, "BanchoConnection: Authenticated with Bancho successfully");
 
             IsConnected = true;
 
-            _connectionWatch = new ConnectionWatch(BanchoClient.TcpClient, MessageHandler);
+            _connectionWatch = new ConnectionWatch(tcpClient, MessageHandler);
 			_connectionWatch.OnConnectionLost += OnConnectionLost;
             _connectionWatch.Start();
 

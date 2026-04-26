@@ -1,5 +1,5 @@
 ﻿using MackMultiBot.Data;
-using OsuSharp.Enums;
+using osu.NET.Enums;
 
 namespace MackMultiBot.Extensions;
 

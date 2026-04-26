@@ -53,7 +53,7 @@ namespace MackMultiBot.Bancho
 					case "LogDirectory":
 						if (string.IsNullOrWhiteSpace(value))
 							break;
-						config.DatabaseDirectory = value;
+						config.LogDirectory = value;
 						break;
 					case "LobbyName":
 						config.LobbyName = value;
