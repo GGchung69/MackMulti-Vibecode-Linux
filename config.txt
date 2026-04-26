@@ -1,7 +1,7 @@
-IrcUsername=GGchung
-IrcPassword=533da4c8
-ApiClientId=5126
-ApiClientSecret=8FEmXk5my3rss4Lyjo6al4nzTWrB2UIs03pfiM0m
+IrcUsername=
+IrcPassword=
+ApiClientId=
+ApiClientSecret=
 DatabaseDirectory=./database
 LogDirectory=./logs
 LobbyName=GGchung's 5.5-6.5* Auto Rotate Lobby
